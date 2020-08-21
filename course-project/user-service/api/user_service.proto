@@ -1,0 +1,82 @@
+syntax = "proto3";
+package proto;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+enum UserStatus {
+    UserStatus_NOTSET = 0;
+    UserStatus_ACTIVE = 1;
+    UserStatus_BLOCKED = 2;
+}
+
+enum UserRole {
+    UserRole_NOTSET = 0;
+    UserRole_CLIENT = 1;
+    UserRole_ADMIN = 2;
+}
+
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (User) {}
+  rpc GetUser(GetUserRequest) returns (User) {}
+  rpc UpdateUser(UpdateUserRequest) returns (User) {}
+  rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {}
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string pwd = 2;
+  UserRole role = 3;
+  string display_name = 4;
+  string phone_number = 5;
+  google.protobuf.Timestamp birth_date = 6;
+  UserStatus status = 7;
+}
+
+message DeleteUserRequest {
+  int32 id = 1;
+}
+
+message GetUserRequest {
+  int32 id = 1;
+  string email = 2;
+}
+
+message UpdateUserRequest {
+  int32 id = 1;
+  string email = 2;
+  string pwd = 3;
+  UserRole role = 4;
+  string display_name = 5;
+  string phone_number = 6;
+  google.protobuf.Timestamp birth_date = 7;
+  UserStatus status = 8;
+}
+
+message ListUsersRequest {
+    int32 limit = 1;
+    int32 offset = 2;
+    UserRole role = 3;
+    UserStatus status = 4;
+}
+
+message ListUsersResponse {
+    int32 total = 1;
+    int32 page_size = 2;
+    int32 page_num = 3;
+    repeated User users = 4;
+}
+
+message User {
+  int32 id = 1;
+  string email = 2;
+  string pwd = 3;
+  UserRole role = 4;
+  string display_name = 5;
+  string phone_number = 6;
+  google.protobuf.Timestamp birth_date = 7;
+  UserStatus status = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}

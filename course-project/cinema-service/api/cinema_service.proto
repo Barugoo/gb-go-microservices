@@ -1,0 +1,120 @@
+syntax = "proto3";
+package proto;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+enum MovieCategory {
+    MovieCategory_NOTSET = 0;
+    MovieCategory_ACTION = 1;
+    MovieCategory_HORROR = 2;
+}
+
+enum MovieMPA {
+    MovieMPA_NOTSET = 0;
+    MovieMPA_G = 1;
+    MovieMPA_PG = 2;
+    MovieMPA_R = 3;
+}
+
+enum MovieVisibility {
+    MovieVisibility_NOTSET = 0;
+    MovieVisibility_VISIBLE = 1;
+    MovieVisibility_HIDDEN = 2;
+}
+
+service MovieService {
+  rpc CreateMovie(CreateMovieRequest) returns (Movie) {}
+  rpc GetMovie(GetMovieRequest) returns (Movie) {}
+  rpc UpdateMovie(UpdateMovieRequest) returns (Movie) {}
+  rpc DeleteMovie(DeleteMovieRequest) returns (google.protobuf.Empty) {}
+  rpc ListMovies(ListMoviesRequest) returns (ListMoviesResponse) {}
+  
+  rpc RentMovie(RentMovieRequest) returns (google.protobuf.Empty) {}
+  
+  // Cron 
+  rpc ListRents(ListRentsRequest) returns (ListRentsResponse) {}
+  rpc EndRent(EndRentRequest) returns (google.protobuf.Empty) {}
+}
+
+message RentMovieRequest {
+  int32 movie_id = 1;
+  int32 user_id = 2;
+}
+
+message EndRentRequest {
+  int32 movie_id = 1;
+  int32 user_id = 2;
+}
+
+message ListRentsRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+}
+
+message ListRentsResponse {
+  int32 total = 1;
+  repeated Rent rents = 2;
+  int32 page_size = 3;
+  int32 page_num = 4;
+}
+
+message Rent {
+  int32 user_id = 1;
+  int32 movie_id = 2;
+  google.protobuf.Timestamp start_date = 3;
+}
+
+message CreateMovieRequest {
+  string title = 1;
+  MovieCategory category = 2;
+  MovieMPA mpa = 3;
+  google.protobuf.Timestamp release_date = 4;
+  MovieVisibility visibility = 5;
+}
+
+message DeleteMovieRequest {
+  int32 id = 1;
+}
+
+message GetMovieRequest {
+  int32 id = 1;
+}
+
+message UpdateMovieRequest {
+  int32 id = 1;
+  string title = 2;
+  MovieCategory category = 3;
+  MovieMPA mpa = 4;
+  google.protobuf.Timestamp release_date = 5;
+  MovieVisibility visibility = 6;
+}
+
+message ListMoviesRequest {
+    int32 limit = 1;
+    int32 offset = 2;
+    MovieVisibility visibility = 4;
+    MovieMPA mpa = 5;
+    MovieCategory category = 6;
+    google.protobuf.Timestamp release_date_start = 7;
+    google.protobuf.Timestamp release_date_end = 8;
+    int32 user_id = 9;
+}
+
+message ListMoviesResponse {
+    int32 total = 1;
+    int32 page_size = 2;
+    int32 page_num = 3;
+    repeated Movie movies = 4;
+}
+
+message Movie {
+  int32 id = 1;
+  string title = 2;
+  MovieCategory category = 3;
+  MovieMPA mpa = 4;
+  google.protobuf.Timestamp release_date = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  MovieVisibility visibility = 8;
+}

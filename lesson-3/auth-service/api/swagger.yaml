@@ -1,0 +1,41 @@
+openapi: 3.0.0
+info:
+  title: Shop
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /login:
+    post:
+      operationId: LoginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        "401":
+          description: Unauthorized
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        Email:
+          type: string
+        Password:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        JWT:
+          type: string
+      example:
+        JWT: JWT
