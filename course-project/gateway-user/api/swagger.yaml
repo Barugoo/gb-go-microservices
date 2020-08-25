@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  title: GatewayUser
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /movies:
+    get:
+      operationId: ListMovies
+      requestBody:
+        params:
+        - in: query
+          name: category
+          schema:
+            type: integer
+            enum: [0, 1]
+            default: 0
+          required: false
+          description: Movie category (0 - action; 1 - horror)
+        - in: query
+          name: year_start
+          schema:
+            type: integer
+          required: false
+          description: Movie release year start
+        - in: query
+          name: year_end
+          schema:
+            type: integer
+          required: false
+          description: Movie release year end
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: true
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMoviesResponse'
+  /register:
+    post:
+      operationId: RegisterUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        "400":
+          description: UserExists
+  /login:
+    post:
+      operationId: LoginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        "401":
+          description: Unauthorized
+components:
+  securitySchemes:
+    bearerAuth:           
+      type: http
+      scheme: bearer
+      bearerFormat: JWT   
+  schemas:
+    RegisterRequest:
+      type: object
+      properties:
+        Email:
+          type: string
+        Password:
+          type: string
+    RegisterResponse:
+      type: object
+      properties:
+        JWT:
+          type: string
+    LoginRequest:
+      type: object
+      properties:
+        Email:
+          type: string
+        Password:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        JWT:
+          type: string
+    Movie:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Title:
+          type: string
+        ReleaseYear:
+          type: string
+        Category:
+          type: integer
+        
+    ListMoviesResponse:
+      type: object
+      properties:
+        PageNum:
+          type: integer
+        PageSize:
+          type: integer
+        Movies:
+          type: object
+          ref: 
