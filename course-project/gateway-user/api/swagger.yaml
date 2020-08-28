@@ -5,11 +5,54 @@ info:
 servers:
 - url: /
 paths:
+  /profile:
+    get:
+      security:
+      - bearerAuth: []
+      tags:
+       - "profile"
+      operationId: GetProfile
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+  /profile/payments:
+    get:
+      security:
+      - bearerAuth: []
+      tags:
+       - "profile"
+      operationId: ListPayments
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPaymentsResponse'
+  /profile/orders:
+    get:
+      security:
+      - bearerAuth: []
+      tags:
+       - "profile"
+      operationId: ListOrders
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOrdersResponse'
   /movies:
     get:
+      tags:
+       - "movies"
       operationId: ListMovies
-      requestBody:
-        params:
+      parameters:
         - in: query
           name: category
           schema:
@@ -40,6 +83,11 @@ paths:
           schema:
             type: integer
           required: false
+        - in: query
+          name: only_rented
+          schema:
+            type: boolean
+          required: false
       responses:
         "200":
           description: Successful response
@@ -47,8 +95,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListMoviesResponse'
+  /movies/{movieId}:
+    get:
+      tags:
+       - "movies"
+      operationId: GetMovie
+      parameters:
+        - in: path
+          name: movieId
+          schema:
+            type: integer
+            format: int32
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Movie'
+  /movies/{movieId}/rent:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+       - "movies"
+      operationId: RentMovie
+      parameters:
+        - in: path
+          name: movieId
+          schema:
+            type: integer
+            format: int32
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/RentMovieResponse'
+        "400":
+          description: Not enough balance
   /register:
     post:
+      tags:
+       - "auth"
       operationId: RegisterUser
       requestBody:
         content:
@@ -67,6 +159,8 @@ paths:
           description: UserExists
   /login:
     post:
+      tags:
+       - "auth"
       operationId: LoginUser
       requestBody:
         content:
@@ -95,6 +189,12 @@ components:
       properties:
         Email:
           type: string
+        DisplayName:
+          type: string
+        Age:
+          type: integer
+        Phone:
+          type: string
         Password:
           type: string
     RegisterResponse:
@@ -119,13 +219,89 @@ components:
       properties:
         ID:
           type: integer
+          format: int32
         Title:
           type: string
         ReleaseYear:
           type: string
         Category:
           type: integer
-        
+    Profile:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Balance:
+          type: number
+          format: float64
+        DisplayName:
+          type: string
+        Email:
+          type: string
+        Role:
+          type: string
+        Status:
+          type: integer
+        Age:
+          type: integer
+        Phone:
+          type: string
+    ListOrdersResponse:
+      type: object
+      properties:
+        PageNum:
+          type: integer
+        PageSize:
+          type: integer
+        Payload:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+    Order:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int32
+        MovieID:
+          type: integer
+        Amount:
+          type: number
+          format: float64
+        CreatedAt:
+          type: integer
+          format: int64
+    ListPaymentsResponse:
+      type: object
+      properties:
+        PageNum:
+          type: integer
+        PageSize:
+          type: integer
+        Payload:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+    Payment:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int32
+        TransactionID:
+          type: integer
+          format: int32
+        Amount:
+          type: number
+          format: float64
+        Status:
+          type: integer
+        CreatedAt:
+          type: integer
+          format: int64
+        UpdatedAt:
+          type: integer
+          format: int64
     ListMoviesResponse:
       type: object
       properties:
@@ -133,6 +309,19 @@ components:
           type: integer
         PageSize:
           type: integer
-        Movies:
+        Payload:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+    RentMovieResponse:
+      type: object
+      properties:
+        Payload:
           type: object
-          ref: 
+          properties:
+            MovieID: 
+              type: integer
+              format: int32
+            RentEndTime:
+              type: integer
+              format: int64
