@@ -6,7 +6,6 @@ variables:
 stages:
   - build_binary
   - lint_and_test
-  - create_image
 
 run_linter:
   tags: [build]
@@ -22,13 +21,5 @@ build_binary:
   image: golang:alpine
   script:
     - go build .
-
-create_image:
-  tags: [build]
-  stage: create_image
-  image: docker:latest
-  script:
-    - docker build -t $IMAGE .
-    - docker push $IMAGE
 
     
