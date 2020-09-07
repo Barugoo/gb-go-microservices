@@ -1,0 +1,327 @@
+info:
+  title: GatewayUser
+  version: 1.0.0
+paths:
+  /profile:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - profile
+      operationId: GetProfile
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Profile'
+      parameters: []
+      produces:
+        - application/json
+  /profile/payments:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - profile
+      operationId: ListPayments
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ListPaymentsResponse'
+      parameters: []
+      produces:
+        - application/json
+  /profile/orders:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - profile
+      operationId: ListOrders
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ListOrdersResponse'
+      parameters: []
+      produces:
+        - application/json
+  /movies:
+    get:
+      tags:
+        - movies
+      operationId: ListMovies
+      parameters:
+        - in: query
+          name: category
+          required: false
+          description: Movie category (0 - action; 1 - horror)
+          enum:
+            - 0
+            - 1
+          default: 0
+          type: integer
+        - in: query
+          name: year_start
+          required: false
+          description: Movie release year start
+          type: integer
+        - in: query
+          name: year_end
+          required: false
+          description: Movie release year end
+          type: integer
+        - in: query
+          name: limit
+          required: true
+          type: integer
+        - in: query
+          name: offset
+          required: false
+          type: integer
+        - in: query
+          name: only_rented
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ListMoviesResponse'
+      produces:
+        - application/json
+  '/movies/{movieId}':
+    get:
+      tags:
+        - movies
+      operationId: GetMovie
+      parameters:
+        - in: path
+          name: movieId
+          required: true
+          format: int32
+          type: integer
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Movie'
+      produces:
+        - application/json
+  '/movies/{movieId}/rent':
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - movies
+      operationId: RentMovie
+      parameters:
+        - in: path
+          name: movieId
+          required: true
+          format: int32
+          type: integer
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RentMovieResponse'
+        '400':
+          description: Not enough balance
+      produces:
+        - application/json
+  /register:
+    post:
+      tags:
+        - auth
+      operationId: RegisterUser
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RegisterResponse'
+        '400':
+          description: UserExists
+      parameters:
+        - required: true
+          name: body
+          in: body
+          schema:
+            $ref: '#/definitions/RegisterRequest'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+  /login:
+    post:
+      tags:
+        - auth
+      operationId: LoginUser
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        '401':
+          description: Unauthorized
+      parameters:
+        - required: true
+          name: body
+          in: body
+          schema:
+            $ref: '#/definitions/LoginRequest'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+swagger: '2.0'
+basePath: /
+definitions:
+  RegisterRequest:
+    type: object
+    properties:
+      Email:
+        type: string
+      DisplayName:
+        type: string
+      Age:
+        type: integer
+      Phone:
+        type: string
+      Password:
+        type: string
+  RegisterResponse:
+    type: object
+    properties:
+      JWT:
+        type: string
+  LoginRequest:
+    type: object
+    properties:
+      Email:
+        type: string
+      Password:
+        type: string
+  LoginResponse:
+    type: object
+    properties:
+      JWT:
+        type: string
+  Movie:
+    type: object
+    properties:
+      ID:
+        type: integer
+        format: int32
+      Title:
+        type: string
+      ReleaseYear:
+        type: string
+      Category:
+        type: integer
+  Profile:
+    type: object
+    properties:
+      ID:
+        type: integer
+      Balance:
+        type: number
+        format: float64
+      DisplayName:
+        type: string
+      Email:
+        type: string
+      Role:
+        type: string
+      Status:
+        type: integer
+      Age:
+        type: integer
+      Phone:
+        type: string
+  ListOrdersResponse:
+    type: object
+    properties:
+      PageNum:
+        type: integer
+      PageSize:
+        type: integer
+      Payload:
+        type: array
+        items:
+          $ref: '#/definitions/Order'
+  Order:
+    type: object
+    properties:
+      ID:
+        type: integer
+        format: int32
+      MovieID:
+        type: integer
+      Amount:
+        type: number
+        format: float64
+      CreatedAt:
+        type: integer
+        format: int64
+  ListPaymentsResponse:
+    type: object
+    properties:
+      PageNum:
+        type: integer
+      PageSize:
+        type: integer
+      Payload:
+        type: array
+        items:
+          $ref: '#/definitions/Payment'
+  Payment:
+    type: object
+    properties:
+      ID:
+        type: integer
+        format: int32
+      TransactionID:
+        type: integer
+        format: int32
+      Amount:
+        type: number
+        format: float64
+      Status:
+        type: integer
+      CreatedAt:
+        type: integer
+        format: int64
+      UpdatedAt:
+        type: integer
+        format: int64
+  ListMoviesResponse:
+    type: object
+    properties:
+      PageNum:
+        type: integer
+      PageSize:
+        type: integer
+      Payload:
+        type: array
+        items:
+          $ref: '#/definitions/Movie'
+  RentMovieResponse:
+    type: object
+    properties:
+      Payload:
+        type: object
+        properties:
+          MovieID:
+            type: integer
+            format: int32
+          RentEndTime:
+            type: integer
+            format: int64
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+x-components: {}
