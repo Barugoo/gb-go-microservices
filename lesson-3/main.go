@@ -24,5 +24,6 @@ func main() {
 		sqlReq += " WHERE status = 1"
 	case USER_STATUS_BLOCKED:
 		sqlReq += " WHERE status = 2"
+		
 	}
 }

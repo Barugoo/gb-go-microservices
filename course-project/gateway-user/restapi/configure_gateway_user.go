@@ -4,16 +4,21 @@ package restapi
 
 import (
 	"crypto/tls"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"google.golang.org/grpc"
 
+	pb "github.com/barugoo/gb-go-microservices/course-project/gateway-user/cmd/proto"
 	"github.com/barugoo/gb-go-microservices/course-project/gateway-user/restapi/operations"
 	"github.com/barugoo/gb-go-microservices/course-project/gateway-user/restapi/operations/auth"
 	"github.com/barugoo/gb-go-microservices/course-project/gateway-user/restapi/operations/movies"
 	"github.com/barugoo/gb-go-microservices/course-project/gateway-user/restapi/operations/profile"
+	"github.com/barugoo/gb-go-microservices/course-project/gateway-user/restapi/service"
 )
 
 //go:generate swagger generate server --target ../../gateway-user --name GatewayUser --spec ../swagger.yaml --principal interface{}
@@ -23,6 +28,24 @@ func configureFlags(api *operations.GatewayUserAPI) {
 }
 
 func configureAPI(api *operations.GatewayUserAPI) http.Handler {
+	log.Println("configuring API")
+
+	authServiceAddr := os.Getenv("AUTH_SERVICE_GRPC_ADDR")
+	if authServiceAddr == "" {
+		log.Fatal("unable to retreive env AUTH_SERVICE_GRPC_ADDR")
+	}
+	conn, err := grpc.Dial(authServiceAddr, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	c := pb.NewAuthServiceClient(conn)
+
+	s := &service.GatewayUserService{
+		AuthServiceClient: c,
+	}
+
 	// configure the api here
 	api.ServeError = errors.ServeError
 
@@ -77,11 +100,9 @@ func configureAPI(api *operations.GatewayUserAPI) http.Handler {
 			return middleware.NotImplemented("operation profile.ListPayments has not yet been implemented")
 		})
 	}
-	if api.AuthLoginUserHandler == nil {
-		api.AuthLoginUserHandler = auth.LoginUserHandlerFunc(func(params auth.LoginUserParams) middleware.Responder {
-			return middleware.NotImplemented("operation auth.LoginUser has not yet been implemented")
-		})
-	}
+	api.AuthLoginUserHandler = auth.LoginUserHandlerFunc(s.Login)
+	api.AuthRegisterUserHandler = auth.RegisterUserHandlerFunc(s.Register)
+
 	if api.AuthRegisterUserHandler == nil {
 		api.AuthRegisterUserHandler = auth.RegisterUserHandlerFunc(func(params auth.RegisterUserParams) middleware.Responder {
 			return middleware.NotImplemented("operation auth.RegisterUser has not yet been implemented")

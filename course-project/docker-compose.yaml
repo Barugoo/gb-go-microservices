@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  gateway-user:
+    build:
+      context: ./gateway-user
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment: 
+      AUTH_SERVICE_GRPC_ADDR: auth-service:9094
+      USER_SERVICE_GRPC_ADDR: user-service:9094
+    command: gateway-user-server --port=8080
+    networks: 
+      - backend
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    environment: 
+      GRPC_PORT: "9094"
+      USER_SERVICE_GRPC_ADDR: user-service:9094
+    networks: 
+      - backend
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    environment: 
+      GRPC_PORT: "9094"
+      DATABASE_HOST: postgres:5432 
+      DATABASE_NAME: postgres 
+      USER_SERVICE_GRPC_ADDR: user-service:9094
+    depends_on: 
+      - postgres
+    networks: 
+      - backend
+
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: prometheus
+  #   ports:
+  #   - 9090:9090
+  #   command:
+  #   - --config.file=/etc/prometheus/prometheus.yml
+  #   volumes:
+  #   - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - '5432:5432'
+    networks:
+      - backend
+      
+networks:
+  backend:    

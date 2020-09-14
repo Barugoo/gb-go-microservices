@@ -1,0 +1,25 @@
+variables:
+    IMAGE: registry.gitlab.com/barugoo/user-service
+    GO111MODULE: 'on'
+    DOCKER_HOST: tcp://docker:2375/
+  
+  stages:
+    - build_binary
+    - lint_and_test
+  
+  run_linter:
+    tags: [build]
+    stage: lint_and_test
+    image: registry.gitlab.com/gitlab-org/gitlab-build-images:golangci-lint-alpine
+    script:
+      - '[ -e .golangci.yml ] || cp /golangci/.golangci.yml .'
+      - golangci-lint run 
+  
+  build_binary:
+    tags: [build]
+    stage: build_binary
+    image: golang:alpine
+    script:
+      - go build .
+  
+      
