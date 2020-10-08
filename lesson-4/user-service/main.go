@@ -7,11 +7,10 @@ import (
 	"strconv"
 
 	pb "github.com/Barugoo/gb-go-microservices/lesson-4/user-service/api"
-	render "github.com/barugoo/gb-go-microservices/lesson-2/pkg/render"
+
+	render "github.com/Barugoo/gb-go-microservices/lesson-2/pkg/render"
 	"github.com/grpc-go"
 )
-
-const Port = 8082
 
 func main() {
 	srv := grpc.NewServer()
