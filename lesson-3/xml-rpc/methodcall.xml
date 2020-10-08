@@ -1,0 +1,10 @@
+<methodCall>
+    <methodName>Service.GetMovie</methodName>
+    <params>
+        <param>
+            <value>
+                <i4>0</i4>
+            </value>
+        </param>
+    </params>
+</methodCall>
