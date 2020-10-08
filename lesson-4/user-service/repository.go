@@ -9,6 +9,7 @@ type UserStorage []*User
 var UU = UserStorage{
 	&User{1, "bob@mail.ru", "Bob", true, "god", "1"},
 	&User{2, "alice@mail.ru", "Alice", false, "secret", "2"},
+	&User{3, "barugoo@mail.ru", "Dimochka", false, "zdarova", "3"},
 }
 
 func (uu UserStorage) CreateUser(user *User) *User {

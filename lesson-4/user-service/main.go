@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"strconv"
 
-	pb "github.com/Barugoo/gb-go-microservices/lesson-4/user-service/api"
+	pb "user-service/api"
 
-	render "github.com/Barugoo/gb-go-microservices/lesson-2/pkg/render"
-	"github.com/grpc-go"
+	render "github.com/barugoo/gb-go-microservices/lesson-2/pkg/render"
+	"google.golang.org/grpc"
 )
 
 func main() {

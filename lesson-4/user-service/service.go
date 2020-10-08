@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
-	pb "github.com/Barugoo/gb-go-microservices/lesson-4/user-service/api"
+	pb "user-service/api"
 
-	"github.com/Barugoo/gb-go-microservices/lesson-4/jwt"
+	"github.com/azomio/courses/lesson4/pkg/jwt"
 )
 
 type UserService struct {
