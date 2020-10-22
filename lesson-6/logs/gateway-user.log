@@ -1,0 +1,29 @@
+{"level":"info","msg":"Name: base.html","time":"2020-10-15T22:24:41+03:00"}
+{"level":"info","msg":"Service started on port 8090","time":"2020-10-15T22:24:41+03:00"}
+{"level":"info","msg":"[854a699a-33f0-4e39-aeb3-46895e804bac] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-15T22:26:36+03:00"}
+{"level":"info","msg":"Get user error: No 'jwt' cookie","time":"2020-10-15T22:26:36+03:00"}
+{"level":"info","msg":"User: {Name: IsPaid:false}","time":"2020-10-15T22:26:36+03:00"}
+{"level":"info","msg":"[309053a9-ba00-47cf-bc2b-843b197854df] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-15T22:26:47+03:00"}
+{"level":"info","msg":"Get user error: No 'jwt' cookie","time":"2020-10-15T22:26:47+03:00"}
+{"level":"info","msg":"User: {Name: IsPaid:false}","time":"2020-10-15T22:26:47+03:00"}
+{"level":"info","msg":"[a0c71ff7-2b41-4a02-b3ae-63e737461a8d] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-15T22:35:44+03:00"}
+{"level":"info","msg":"User: {Name:Dimochka IsPaid:false}","time":"2020-10-15T22:35:44+03:00"}
+{"level":"info","msg":"No user: No 'jwt' cookie","time":"2020-10-15T22:36:18+03:00"}
+{"level":"info","msg":"[1c0dfe51-dce5-4911-8e93-001853cb5f29] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-16T20:49:12+03:00"}
+{"level":"info","msg":"User: {Name:Dimochka IsPaid:false}","time":"2020-10-16T20:49:12+03:00"}
+{"level":"info","msg":"[fba2617a-cea6-47cb-a6b7-61d67e03cd6b] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-16T21:21:56+03:00"}
+{"level":"info","msg":"User: {Name:Dimochka IsPaid:false}","time":"2020-10-16T21:21:56+03:00"}
+{"level":"info","msg":"[68dba1aa-9a00-482d-b2be-4acabeb7a78a] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-16T21:31:35+03:00"}
+{"level":"info","msg":"User: {Name:Dimochka IsPaid:false}","time":"2020-10-16T21:31:35+03:00"}
+{"level":"info","msg":"[8771ddd5-dcbe-4602-9457-cf261282cd01] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-16T22:09:16+03:00"}
+{"level":"info","msg":"User: {Name:Dimochka IsPaid:false}","time":"2020-10-16T22:09:16+03:00"}
+{"level":"info","msg":"[7abb1f53-2f6c-42ea-b9f8-ac35676fbd66] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-16T22:09:25+03:00"}
+{"level":"info","msg":"User: {Name:Dimochka IsPaid:false}","time":"2020-10-16T22:09:25+03:00"}
+{"level":"info","msg":"[d1a5d46b-771d-415d-9cb0-9818bcac5d6a] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-19T16:16:11+03:00"}
+{"level":"info","msg":"User: {Name:Dimochka IsPaid:false}","time":"2020-10-19T16:16:11+03:00"}
+{"level":"info","msg":"[de5eb333-ff16-4389-8494-0c3e183e2d0b] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-19T19:25:28+03:00"}
+{"level":"info","msg":"User: {Name:Dimochka IsPaid:false}","time":"2020-10-19T19:25:28+03:00"}
+{"level":"info","msg":"[3c80c628-03c6-4c4c-b41f-dba78c55a2c9] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-19T19:55:40+03:00"}
+{"level":"info","msg":"User: {Name:Dimochka IsPaid:false}","time":"2020-10-19T19:55:40+03:00"}
+{"level":"info","msg":"[233c3e01-02df-46c5-b298-6fabf8f79136] Get movie error: make GET request error: Get \"localhost:9096/movie\": unsupported protocol scheme \"localhost\"","time":"2020-10-19T19:55:43+03:00"}
+{"level":"info","msg":"User: {Name:Dimochka IsPaid:false}","time":"2020-10-19T19:55:43+03:00"}

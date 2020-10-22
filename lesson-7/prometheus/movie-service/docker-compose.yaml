@@ -1,0 +1,22 @@
+version: '3'
+services:
+    prometheus:
+        image: prom/prometheus
+        ports:
+            - 9090:9090
+        volumes:
+            - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    movie:
+        image: golang:1.14-alpine
+        command: go run .
+        ports:
+        - 9099
+        working_dir: /root/
+        volumes:
+        - .:/root
+    client:
+        image: golang:1.14-alpine
+        command: go run .
+        working_dir: /root/
+        volumes:
+        - ./client:/root           
