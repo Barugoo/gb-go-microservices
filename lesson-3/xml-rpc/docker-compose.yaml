@@ -1,0 +1,29 @@
+version: '3'
+services:
+    movie-service:
+        build:
+          context: .
+          dockerfile: Dockerfile
+        environment: 
+          DATABASE_HOST: postgres:5432 
+          DATABASE_NAME: postgres 
+        ports:
+          - '8089:8089'
+        depends_on: 
+          - postgres
+        networks: 
+          - backend
+      
+    postgres:
+        image: postgres:latest
+        container_name: postgres
+        environment:
+            - POSTGRES_USER=postgres 
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=postgres
+        ports:
+            - '5432:5432'
+        networks:
+            - backend
+networks:
+    backend:    

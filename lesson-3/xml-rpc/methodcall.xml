@@ -3,8 +3,35 @@
     <params>
         <param>
             <value>
-                <i4>0</i4>
+                <i4>1</i4>
             </value>
         </param>
     </params>
 </methodCall>
+
+//
+
+<methodResponse>
+    <params>
+        <param>
+            <value>
+                <int>1</int>
+            </value>
+        </param>
+        <param>
+            <value>
+                <string>fight club</string>
+            </value>
+        </param>
+        <param>
+            <value>
+                <string>dsdsd</string>
+            </value>
+        </param>
+        <param>
+            <value>
+                <string>dsds</string>
+            </value>
+        </param>
+    </params>
+</methodResponse>
