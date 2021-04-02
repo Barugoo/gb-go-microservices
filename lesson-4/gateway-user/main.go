@@ -11,8 +11,10 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/azomio/courses/lesson4/pkg/grpc/user"
-	"github.com/azomio/courses/lesson4/pkg/jwt"
+	"gateway-user/pkg/jwt"
+
+	user "gateway-user/api/user"
+
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 )
@@ -21,8 +23,9 @@ var UserCli user.UserClient
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/", MainHandler)
 
+	// r.Use(jwt.AuthMiddleware)
+	r.HandleFunc("/", MainHandler)
 	r.HandleFunc("/login", LoginFormHandler).Methods(http.MethodGet)
 	r.HandleFunc("/login", LoginHandler).Methods(http.MethodPost)
 	r.HandleFunc("/logout", LogoutHandler).Methods(http.MethodPost)
@@ -48,7 +51,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	http.ListenAndServe(cfg.Addr, r)
+	log.Fatal(http.ListenAndServe(cfg.Addr, r))
 }
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
@@ -117,25 +120,25 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Ошибка логина, ее можно показать пользователю
-	if res.GetError() != "" {
-		page.Error = res.GetError()
-		TT.Login.ExecuteTemplate(w, "base", page)
-		return
-	}
+	// // Ошибка логина, ее можно показать пользователю
+	// if res.GetError() != "" {
+	// 	page.Error = res.GetError()
+	// 	TT.Login.ExecuteTemplate(w, "base", page)
+	// 	return
+	// }
 
-	tok := res.GetJwt()
+	tok := res.GetToken()
 
 	// Если пользователь успешно залогинен записываем токен в cookie
 	http.SetCookie(w, &http.Cookie{Name: "jwt", Value: tok})
 
 	jwtData, err := jwt.Parse(tok)
 	if err != nil {
+		log.Println(err)
 		// В случае не валидного токена показываем страницу логина
 		TT.Login.ExecuteTemplate(w, "base", page)
 		return
 	}
-
 	page.User = User{Name: jwtData.Name}
 	TT.Login.ExecuteTemplate(w, "base", page)
 }

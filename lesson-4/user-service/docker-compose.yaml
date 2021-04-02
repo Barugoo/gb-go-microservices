@@ -1,0 +1,21 @@
+version: '3'
+services:
+    user-service:
+        build:
+          context: .
+          dockerfile: Dockerfile
+        environment: 
+          DATABASE_HOST: postgres:5432 
+          DATABASE_NAME: postgres 
+        ports:
+          - '8010:9094'
+      
+    postgres:
+        image: postgres:latest
+        container_name: postgres
+        environment:
+            - POSTGRES_USER=postgres 
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=postgres
+        ports:
+            - '5432:5432'

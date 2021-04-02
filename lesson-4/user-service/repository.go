@@ -1,48 +1,63 @@
 package main
 
 import (
-	uuid "github.com/google/uuid"
+	"context"
+	"database/sql"
+	"errors"
 )
 
-type UserStorage []*User
-
-var UU = UserStorage{
-	&User{1, "bob@mail.ru", "Bob", true, "god", "1"},
-	&User{2, "alice@mail.ru", "Alice", false, "secret", "2"},
-	&User{3, "barugoo@mail.ru", "Dimochka", false, "zdarova", "3"},
+type UserStorage struct {
+	db *sql.DB
 }
 
-func (uu UserStorage) CreateUser(user *User) *User {
-	maxID := uu[len(uu)-1].ID
-	user.ID = maxID + 1
-	user.Token = uuid.New().String()
-	UU = append(UU, user)
-	return user
-}
+var (
+	ErrNotFound = errors.New("not found")
+)
 
-func (uu UserStorage) GetByEmail(email string) *User {
-	for _, u := range uu {
-		if u.Email == email {
-			return u
-		}
+func wrapError(err error) error {
+	switch {
+	case errors.Is(err, sql.ErrNoRows):
+		return ErrNotFound
+	default:
+		return err
 	}
-	return nil
 }
 
-func (uu UserStorage) GetByToken(token string) *User {
-	for _, u := range uu {
-		if u.Token == token {
-			return u
-		}
+func (s *UserStorage) GetByID(ctx context.Context, userID int32) (*User, error) {
+
+	var res User
+	if err := s.db.QueryRow("SELECT id, email, name, is_paid, pwd, token FROM users WHERE id = $1", userID).
+		Scan(&res.ID, &res.Email, &res.Name, &res.IsPaid, &res.Pwd, &res.Token); err != nil {
+		return nil, wrapError(err)
 	}
-	return nil
+	return &res, nil
 }
 
-func (uu UserStorage) GetByID(id int) *User {
-	for _, u := range uu {
-		if u.ID == id {
-			return u
-		}
+func (s *UserStorage) GetByEmail(ctx context.Context, email string) (*User, error) {
+
+	var res User
+	if err := s.db.QueryRow("SELECT id, email, name, is_paid, pwd, token FROM users WHERE email = $1", email).
+		Scan(&res.ID, &res.Email, &res.Name, &res.IsPaid, &res.Pwd, &res.Token); err != nil {
+		return nil, wrapError(err)
 	}
-	return nil
+	return &res, nil
+}
+
+func (s *UserStorage) GetByToken(ctx context.Context, token string) (*User, error) {
+
+	var res User
+	if err := s.db.QueryRow("SELECT id, email, name, is_paid, pwd, token FROM users WHERE token = $1", token).
+		Scan(&res.ID, &res.Email, &res.Name, &res.IsPaid, &res.Pwd, &res.Token); err != nil {
+		return nil, wrapError(err)
+	}
+	return &res, nil
+}
+
+func (s *UserStorage) CreateUser(ctx context.Context, user *User) (*User, error) {
+	var res User
+	if _, err := s.db.Exec("INSERT INTO users (id, email, name, is_paid, pwd, token) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+		user.ID, user.Email, user.Name, user.IsPaid, user.Pwd, user.Token); err != nil {
+		return nil, err
+	}
+	return &res, nil
 }

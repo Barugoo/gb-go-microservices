@@ -8,8 +8,8 @@ type Config struct {
 }
 
 var cfg = Config{
-	Addr:         ":8082",
-	UserGRPCAddr: ":9094",
+	Addr:         ":8182",
+	UserGRPCAddr: ":8010",
 	UserAddr:     "http://localhost:8081",
 	MovieAddr:    "http://localhost:8080",
 }

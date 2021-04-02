@@ -16,7 +16,7 @@ type Payload struct {
 }
 
 const (
-	Secret = "secret-key"
+	Secret = "secret"
 )
 
 func buildSign(head, payload string) (string, error) {
