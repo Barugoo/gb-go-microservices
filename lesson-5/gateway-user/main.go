@@ -21,7 +21,7 @@ import (
 var UserCli user.UserClient
 
 func main() {
-	consulAddr := flag.String("consul_addr", "localhost:8600", "Consul address")
+	consulAddr := flag.String("consul_addr", "localhost:8500", "Consul address")
 	flag.Parse()
 
 	if err := loadConfig(*consulAddr); err != nil {
@@ -56,7 +56,7 @@ func main() {
 	}
 
 	log.Print("Service started on port " + cfg.Port)
-	http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), r)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), r))
 }
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
@@ -154,6 +154,8 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getMovies() (*[]Movie, error) {
+	fmt.Println(cfg.MovieAddr)
+
 	mm := &[]Movie{}
 	err := get(cfg.MovieAddr+"/movie", mm)
 	if err != nil {

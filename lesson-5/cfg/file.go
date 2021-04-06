@@ -1,15 +1,17 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
+
+	"github.com/go-playground/validator"
+	"gopkg.in/yaml.v2"
 )
 
 func main() {
-	cfgPath := flag.String("config", "default.json", "Path to config file")
+	cfgPath := flag.String("config", "default.yaml", "Path to config file")
 	flag.Parse()
 
 	content, err := ioutil.ReadFile(*cfgPath)
@@ -18,10 +20,22 @@ func main() {
 	}
 
 	cfg := struct {
-		Line string
+		Line   string   `yaml:"line" validate:"required"`
+		Array  []string `yaml:"array"`
+		Struct struct {
+			Field1 struct {
+				Dsdsds string `yaml:"dsdsdsd"`
+			} `yaml:"field1"`
+			Field2 int
+		} `yaml:"struct"`
 	}{}
-	err = json.Unmarshal(content, &cfg)
+	err = yaml.Unmarshal(content, &cfg)
 	if err != nil {
+		log.Fatal(err)
+	}
+
+	validate := validator.New()
+	if err = validate.Struct(cfg); err != nil {
 		log.Fatal(err)
 	}
 
