@@ -1,0 +1,35 @@
+version: '3'
+services:
+    gateway-user:
+        build:
+            context: gateway-user/
+            dockerfile: Dockerfile
+        volumes:
+            - ./docker-elk/logs:/var/log/super-cinema
+        ports:
+        - '8080:8080'
+        command: ["/app/main","--consul_addr","consul:8500"]
+        depends_on: 
+            - consul
+
+    user-service:
+        build:
+            context: user-service/
+            dockerfile: Dockerfile
+        volumes:
+            - ./docker-elk/logs:/var/log/super-cinema
+        ports:
+        - '9096:9096'
+        command: ["/app/main","--consul_addr","consul:8500"]
+        depends_on: 
+            - consul
+    consul:
+        image: consul:1.9.4
+        container_name: consul_dashboard__consul
+        hostname: consul.consul-conf.docker
+        volumes:
+        - ./docker/data/consul/data:/consul/data
+        - ./docker/data/consul/config:/consul/config
+        ports:
+        - 8500:8500
+        command: ["consul", "agent", "-server", "-ui", "-bind", "0.0.0.0", "-client", "0.0.0.0", "-data-dir", "/consul/data", "-config-dir", "/consul/config", "-bootstrap", "-datacenter", "docker"]

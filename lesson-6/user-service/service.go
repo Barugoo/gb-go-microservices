@@ -20,8 +20,10 @@ func (s *UserService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 	}
 
 	if u.Pwd != in.GetPwd() {
+		logger.Warnf(ctx, "wrong password for user %s", in.Email)
 		return &pb.LoginResponse{Error: "Неправильный email или пароль"}, nil
 	}
+	logger.Infof(ctx, "correct password %s ", in.Email)
 
 	t, err := jwt.Make(jwt.Payload{u.ID, u.Name, u.IsPaid})
 

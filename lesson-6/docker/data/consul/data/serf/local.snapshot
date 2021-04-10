@@ -1,0 +1,14 @@
+alive: consul.consul-conf.docker 172.26.0.2:8301
+event-clock: 1
+alive: consul.consul-conf.docker 172.26.0.2:8301
+event-clock: 2
+alive: consul.consul-conf.docker 172.26.0.2:8301
+event-clock: 3
+alive: consul.consul-conf.docker 172.26.0.2:8301
+event-clock: 4
+alive: consul.consul-conf.docker 172.26.0.2:8301
+event-clock: 5
+alive: consul.consul-conf.docker 172.26.0.2:8301
+event-clock: 6
+alive: consul.consul-conf.docker 172.26.0.2:8301
+event-clock: 7

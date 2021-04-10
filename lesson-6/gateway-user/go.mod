@@ -4,8 +4,8 @@ go 1.14
 
 require (
 	github.com/azomio/courses v0.0.0-20200408104906-7fdc69adaa6d
-	github.com/barugoo/gb-go-microservices v0.0.0-20201001192850-ce7f1d446450
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/barugoo/gb-go-microservices v0.0.0-20201001192850-ce7f1d446450 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/gorilla/mux v1.8.0
 	github.com/hashicorp/consul/api v1.7.0

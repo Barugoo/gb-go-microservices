@@ -12,46 +12,51 @@ import (
 	"net/url"
 	"os"
 
-	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/azomio/courses/lesson4/pkg/grpc/user"
 	"github.com/azomio/courses/lesson4/pkg/jwt"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
+
+	log "gateway-user/logger"
+	"gateway-user/reqdata"
 )
 
 var UserCli user.UserClient
 
+var logger = log.NewLogger()
+
 const ServiceName = "gateway-user"
 
 func main() {
+	ctx := context.Background()
+
 	f, err := os.Create(
-		fmt.Sprintf("logs/%s.log", ServiceName),
+		fmt.Sprintf("/var/log/super-cinema/%s.log", ServiceName),
 	)
 	if err != nil {
-		log.Fatalf("error opening file: %v", err)
+		logger.Fatalf(ctx, "error opening file: %v", err)
 	}
 	defer f.Close()
-	log.SetOutput(f)
-	log.SetFormatter(&log.JSONFormatter{})
+	logger.SetOutput(f)
 
-	consulAddr := flag.String("consul_addr", "localhost:8600", "Consul address")
+	consulAddr := flag.String("consul_addr", "consul:8500", "Consul address")
 	flag.Parse()
 
 	if err := loadConfig(*consulAddr); err != nil {
-		log.Fatal(err)
+		logger.Fatal(ctx, err)
 	}
 	r := mux.NewRouter()
-	r.HandleFunc("/", requestIDMiddleware(MainHandler))
+	r.HandleFunc("/", reqdata.RequestIDMiddleware(MainHandler))
 
-	r.HandleFunc("/login", requestIDMiddleware(LoginFormHandler)).Methods(http.MethodGet)
-	r.HandleFunc("/login", requestIDMiddleware(LoginHandler)).Methods(http.MethodPost)
-	r.HandleFunc("/logout", requestIDMiddleware(LogoutHandler)).Methods(http.MethodPost)
+	r.HandleFunc("/login", reqdata.RequestIDMiddleware(LoginFormHandler)).Methods(http.MethodGet)
+	r.HandleFunc("/login", reqdata.RequestIDMiddleware(LoginHandler)).Methods(http.MethodPost)
+	r.HandleFunc("/logout", reqdata.RequestIDMiddleware(LogoutHandler)).Methods(http.MethodPost)
 
 	conn, err := grpc.Dial(cfg.UserGRPCAddr, grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("did not connect: %s", err)
+		logger.Fatalf(ctx, "did not connect: %s", err)
 	}
 	UserCli = user.NewUserClient(conn)
 
@@ -60,46 +65,45 @@ func main() {
 
 	TT.MovieList, err = template.ParseFiles("base.html", "main.html")
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(ctx, err)
 	}
 
-	log.Printf("Name: %s", TT.MovieList.Name())
+	logger.Infof(ctx, "Name: %s", TT.MovieList.Name())
 
 	TT.Login, err = template.ParseFiles("base.html", "login.html")
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(ctx, err)
 	}
 
-	log.Print("Service started on port " + cfg.Port)
+	logger.Infof(ctx, "Service started on port "+cfg.Port)
 	err = http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), r)
-	log.Print(err)
+	logger.Fatal(ctx, err)
 }
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 
 	page := MainPage{}
-
-	rid := r.Context().Value(RequestIDContextKey).(string)
 
 	var err error
 	movies, err := getMovies()
 	if err != nil {
-		log.Printf("[%s] Get movie error: %v", rid, err)
-		page.MoviesError = "Не удалось загрузить список. Код ошибки: " + rid
+		logger.Errorf(ctx, "Get movie error: %w", err)
+		page.MoviesError = "Не удалось загрузить список. Код ошибки: " + reqdata.GetRequestID(ctx)
 	}
 	page.Movies = movies
 
 	user, err := getUserByToken(r)
 	if err != nil {
-		log.Printf("Get user error: %v", err)
+		logger.Errorf(ctx, "Get user error: %v", err)
 	}
 	page.User = user
 
-	log.Printf("User: %+v", page.User)
+	logger.Infof(ctx, "User: %+v", page.User)
 
 	err = TT.MovieList.ExecuteTemplate(w, "base", page)
 	if err != nil {
-		log.Printf("Render error: %v", err)
+		logger.Errorf(ctx, "Render error: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
@@ -115,7 +119,7 @@ func LoginFormHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 	page.User, err = getUserByToken(r)
 	if err != nil {
-		log.Printf("No user: %v", err)
+		logger.Errorf(r.Context(), "No user: %v", err)
 		// В случае не валидного токена показываем страницу логина
 		TT.Login.ExecuteTemplate(w, "base", page)
 		return
@@ -131,8 +135,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.PostFormValue("email")
 	pwd := r.PostFormValue("pwd")
 
-	rid := r.Context().Value(RequestIDContextKey).(string)
-	md := metadata.Pairs("X-Request-ID", rid)
+	md := metadata.Pairs(reqdata.RequestIDHeader, reqdata.GetRequestID(r.Context()))
 	ctxRpc := metadata.NewOutgoingContext(context.Background(), md)
 
 	res, err := UserCli.Login(
@@ -142,18 +145,21 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Что-то не так с сервисом user
 	if err != nil {
-		log.Printf("Get user error: %v", err)
-		page.Error = "Сервис авторизации недоступен. Код ошибки: " + rid
+		logger.Errorf(r.Context(), "Get user error: %v", err)
+		page.Error = "Сервис авторизации недоступен. Код ошибки: " + reqdata.GetRequestID(r.Context())
 		TT.Login.ExecuteTemplate(w, "base", page)
 		return
 	}
 
 	// Ошибка логина, ее можно показать пользователю
 	if res.GetError() != "" {
+		logger.Errorf(r.Context(), "Login error: %v", err)
 		page.Error = res.GetError()
 		TT.Login.ExecuteTemplate(w, "base", page)
 		return
 	}
+
+	logger.Infof(r.Context(), "Successfuly logged in: %s", email)
 
 	tok := res.GetJwt()
 

@@ -1,0 +1,15 @@
+{"level":"info","msg":"Name: base.html","rid":"","time":"2021-04-10T13:21:16Z"}
+{"level":"info","msg":"Service started on port 8080","rid":"","time":"2021-04-10T13:21:16Z"}
+{"level":"error","msg":"Get movie error: %!w(*fmt.wrapError=\u0026{make GET request error: Get \"/movie\": unsupported protocol scheme \"\" 0xc000230150})","rid":"b077a874-8512-4077-9079-6311efa5b481","time":"2021-04-10T13:21:16Z"}
+{"level":"info","msg":"User: {Name:Dimochka IsPaid:false}","rid":"b077a874-8512-4077-9079-6311efa5b481","time":"2021-04-10T13:21:16Z"}
+{"level":"error","msg":"No user: No 'jwt' cookie","rid":"6e47fc97-976f-4b1e-8cf7-34a90efe869f","time":"2021-04-10T13:21:20Z"}
+{"level":"error","msg":"Login error: \u003cnil\u003e","rid":"4d1dc81d-647a-4136-8154-396c6859ce0e","time":"2021-04-10T13:21:26Z"}
+{"level":"error","msg":"Login error: \u003cnil\u003e","rid":"6c771c37-643f-4290-bd60-9c6e08588f3b","time":"2021-04-10T13:22:29Z"}
+{"level":"info","msg":"Successfuly logged in: barugoo@mail.ru","rid":"258be1ac-8e06-4910-913e-0bd3fe5221f2","time":"2021-04-10T13:22:35Z"}
+{"level":"error","msg":"No user: No 'jwt' cookie","rid":"0bf6d4ca-d414-4ff8-b3d0-914ddf6519ee","time":"2021-04-10T13:26:25Z"}
+{"level":"error","msg":"Get user error: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp: lookup user-service on 127.0.0.11:53: no such host\"","rid":"523b348a-433d-4b5f-9677-44824330b855","time":"2021-04-10T13:26:29Z"}
+{"level":"error","msg":"Get user error: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp: lookup user-service on 127.0.0.11:53: no such host\"","rid":"17782cc3-e7a4-4c83-9839-9d4eda0fd57d","time":"2021-04-10T13:26:40Z"}
+{"level":"error","msg":"No user: No 'jwt' cookie","rid":"c31b2a63-0c82-4daf-b3f9-cf8256f4f5c3","time":"2021-04-10T13:27:46Z"}
+{"level":"error","msg":"Login error: \u003cnil\u003e","rid":"f89c8cc6-0d98-42dd-a661-4b55d5047848","time":"2021-04-10T13:27:51Z"}
+{"level":"error","msg":"Login error: \u003cnil\u003e","rid":"0652d473-d1b1-4348-8bea-07ad5fa212b4","time":"2021-04-10T13:27:57Z"}
+{"level":"info","msg":"Successfuly logged in: barugoo@mail.ru","rid":"1fb5543a-ba5f-4572-8188-f3a6b832707e","time":"2021-04-10T13:29:10Z"}

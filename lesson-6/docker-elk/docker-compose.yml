@@ -41,7 +41,7 @@ services:
         target: /usr/share/logstash/pipeline
         read_only: true
       - type: bind
-        source: ../logs
+        source: ./logs
         target: /usr/share/logstash/input
         read_only: false
     ports:

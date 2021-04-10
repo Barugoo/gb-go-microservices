@@ -10,8 +10,9 @@ import (
 	"strconv"
 
 	pb "user-service/api"
+	"user-service/reqdata"
 
-	log "github.com/sirupsen/logrus"
+	log "user-service/logger"
 
 	render "github.com/barugoo/gb-go-microservices/lesson-2/pkg/render"
 	"google.golang.org/grpc"
@@ -20,17 +21,21 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+var logger = log.NewLogger()
+
 func RecoverInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 	var rid string
 	defer func() {
 		if r := recover(); r != nil {
-			log.Printf("[%s] Recover from %v, %s", rid, r, debug.Stack())
+			logger.Errorf(ctx, "Recover from %v, %s", rid, r, debug.Stack())
 			err = status.Errorf(codes.Internal, "Internal error")
 			return
 		}
 	}()
 	md, _ := metadata.FromIncomingContext(ctx)
-	rid = md.Get("X-Request-ID")[0]
+	if ridSli := md.Get(reqdata.RequestIDHeader); len(ridSli) > 0 {
+		rid = ridSli[0]
+	}
 
 	return handler(ctx, req)
 }
@@ -38,15 +43,15 @@ func RecoverInterceptor(ctx context.Context, req interface{}, info *grpc.UnarySe
 const ServiceName = "user-service"
 
 func main() {
+	ctx := context.Background()
 	f, err := os.Create(
-		fmt.Sprintf("logs/%s.log", ServiceName),
+		fmt.Sprintf("/var/log/super-cinema/%s.log", ServiceName),
 	)
 	if err != nil {
-		log.Fatalf("error opening file: %v", err)
+		logger.Fatalf(ctx, "error opening file: %v", err)
 	}
 	defer f.Close()
-	log.SetOutput(f)
-	log.SetFormatter(&log.JSONFormatter{})
+	logger.SetOutput(f)
 
 	srv := grpc.NewServer(grpc.UnaryInterceptor(RecoverInterceptor))
 
@@ -54,10 +59,10 @@ func main() {
 
 	listener, err := net.Listen("tcp", ":9096")
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		logger.Fatalf(ctx, "failed to listen: %v", err)
 	}
 
-	log.Println("Starting server on localhost: 9096")
+	logger.Infof(ctx, "Starting server on localhost: 9096")
 	srv.Serve(listener)
 }
 
@@ -99,15 +104,19 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// TO DO better validation (especially for password)
 	if email == "" || password == "" {
+		logger.Errorf(r.Context(), "empty email or password %s", email)
 		render.RenderJSONErr(w, "Wrong email or password", http.StatusBadRequest)
 		return
 	}
 
 	usr := UU.GetByEmail(email)
 	if usr == nil || usr.Pwd != password {
+		logger.Errorf(r.Context(), "wrong email or password %s", email)
 		render.RenderJSONErr(w, "Wrong email or password", http.StatusUnauthorized)
 		return
 	}
+
+	logger.Infof(r.Context(), "got user by email %s", email)
 
 	render.RenderJSON(w, usr)
 	return
