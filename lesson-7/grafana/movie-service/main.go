@@ -11,6 +11,10 @@ import (
 	pb "github.com/barugoo/gb-go-microservices/lesson-3/movie-service/api"
 )
 
+func NewMovieService(cc grpc.Conn) MovieClient {
+	return pb.NewMovieClientWithPrometheus(cc)
+}
+
 func main() {
 	srv := grpc.NewServer()
 

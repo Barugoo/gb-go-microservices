@@ -1,36 +1,45 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"net"
+	"context"
+	"math/rand"
 	"net/http"
+	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"google.golang.org/grpc"
 
-	pb "github.com/barugoo/gb-go-microservices/lesson-3/movie-service/api"
+	log "movie-service/logger"
+	metrics "movie-service/metrics"
+	reqdata "movie-service/reqdata"
 )
 
+var logger = log.NewLogger()
+
 func main() {
-	srv := grpc.NewServer()
+	rand.Seed(time.Now().Unix())
 
-	pb.RegisterMovieServer(srv, &Service{})
+	ctx := context.Background()
 
-	http.HandleFunc("/lol", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "hey")
-	})
+	r := mux.NewRouter()
+	r.Use(reqdata.RequestIDMiddleware, metrics.NewLoggingMiddleware(logger))
+
+	r.HandleFunc("/success", func(w http.ResponseWriter, r *http.Request) {
+		// pretend some work
+		time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
+		w.WriteHeader(http.StatusOK)
+	}).Methods("GET")
+	r.HandleFunc("/failure", func(w http.ResponseWriter, r *http.Request) {
+		// pretend some work
+		time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
+		w.WriteHeader(http.StatusInternalServerError)
+	}).Methods("GET")
+
 	http.Handle("/metrics", promhttp.Handler())
 	go func() {
-		log.Println("Starting http server on port 9099")
+		logger.Infof(ctx, "Starting http server on port 9099")
 		http.ListenAndServe(":9099", nil)
 	}()
 
-	listener, err := net.Listen("tcp", ":9098")
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-
-	log.Println("Starting server on localhost:9098")
-	srv.Serve(listener)
+	logger.Fatal(ctx, http.ListenAndServe(":9098", r))
 }

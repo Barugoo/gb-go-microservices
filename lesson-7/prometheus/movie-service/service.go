@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	pb "github.com/barugoo/gb-go-microservices/lesson-3/movie-service/api"
+	pb "movie-service/api"
 )
 
 type Service struct{}

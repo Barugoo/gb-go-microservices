@@ -1,5 +1,9 @@
 version: '3'
 services:
+    grafana:
+        image: grafana/grafana
+        ports:
+          - 3000:3000
     prometheus:
         image: prom/prometheus
         ports:
@@ -10,7 +14,7 @@ services:
         image: golang:1.14-alpine
         command: go run .
         ports:
-        - 9099
+        - '9098:9098'
         working_dir: /root/
         volumes:
         - .:/root

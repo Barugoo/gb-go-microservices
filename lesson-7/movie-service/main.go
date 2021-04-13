@@ -6,7 +6,6 @@ import (
 	"net"
 	"net/http"
 	"runtime"
-	"time"
 
 	"google.golang.org/grpc"
 
@@ -34,9 +33,6 @@ func main() {
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
-	go func() {
-		time.Sleep(5 * time.Second)
-	}()
 	m := &runtime.MemStats{}
 	runtime.ReadMemStats(m)
 
