@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package api;
+
+service MovieService {
+    rpc GetMovie(GetMovieRequest) returns (Movie) {}
+    rpc ListMovies(ListMoviesRequest) returns (ListMoviesResponse) {}
+}
+
+message ListMoviesRequest {
+}
+
+message ListMoviesResponse {
+    repeated Movie items = 1;
+}
+
+message Movie {
+    int64 id = 1;
+    string name = 2;
+    string poster = 3;
+    string url = 4;
+}
+
+message GetMovieRequest {
+    int64 movie_id = 1;
+}

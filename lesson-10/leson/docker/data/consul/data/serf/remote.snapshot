@@ -1,0 +1,5 @@
+alive: consul.consul-conf.docker.docker 172.28.0.6:8302
+alive: consul.consul-conf.docker.docker 172.28.0.3:8302
+alive: consul.consul-conf.docker.docker 172.28.0.3:8302
+alive: consul.consul-conf.docker.docker 172.28.0.2:8302
+alive: consul.consul-conf.docker.docker 172.28.0.2:8302

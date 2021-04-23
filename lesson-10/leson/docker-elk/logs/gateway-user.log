@@ -1,0 +1,14 @@
+{"level":"info","msg":"Name: base.html","rid":"","time":"2021-04-23T20:21:50Z"}
+{"level":"info","msg":"Service started on port 8080","rid":"","time":"2021-04-23T20:21:50Z"}
+{"level":"error","msg":"Get movie error: rpc error: code = Unavailable desc = transport is closing","rid":"93485d24-c383-4734-8499-773ab09a2ec9","time":"2021-04-23T20:22:44Z"}
+{"level":"error","msg":"Get user error: No 'jwt' cookie","rid":"93485d24-c383-4734-8499-773ab09a2ec9","time":"2021-04-23T20:22:44Z"}
+{"level":"info","msg":"User: {Name: IsPaid:false}","rid":"93485d24-c383-4734-8499-773ab09a2ec9","time":"2021-04-23T20:22:44Z"}
+{"level":"error","msg":"Get movie error: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp 172.28.0.5:9098: connect: connection refused\"","rid":"0d1ab204-b1f3-4e64-bd16-2fd925aec4cb","time":"2021-04-23T20:22:45Z"}
+{"level":"error","msg":"Get user error: No 'jwt' cookie","rid":"0d1ab204-b1f3-4e64-bd16-2fd925aec4cb","time":"2021-04-23T20:22:45Z"}
+{"level":"info","msg":"User: {Name: IsPaid:false}","rid":"0d1ab204-b1f3-4e64-bd16-2fd925aec4cb","time":"2021-04-23T20:22:45Z"}
+{"level":"error","msg":"Get movie error: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp: lookup movie on 127.0.0.11:53: no such host\"","rid":"2ba84de8-6843-40d1-8e9b-9053421067ae","time":"2021-04-23T21:15:16Z"}
+{"level":"error","msg":"Get user error: No 'jwt' cookie","rid":"2ba84de8-6843-40d1-8e9b-9053421067ae","time":"2021-04-23T21:15:16Z"}
+{"level":"info","msg":"User: {Name: IsPaid:false}","rid":"2ba84de8-6843-40d1-8e9b-9053421067ae","time":"2021-04-23T21:15:16Z"}
+{"level":"error","msg":"Get movie error: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp: lookup movie on 127.0.0.11:53: no such host\"","rid":"447b4c7a-ca9f-45d3-938d-72d2636ca252","time":"2021-04-23T21:15:19Z"}
+{"level":"error","msg":"Get user error: No 'jwt' cookie","rid":"447b4c7a-ca9f-45d3-938d-72d2636ca252","time":"2021-04-23T21:15:19Z"}
+{"level":"info","msg":"User: {Name: IsPaid:false}","rid":"447b4c7a-ca9f-45d3-938d-72d2636ca252","time":"2021-04-23T21:15:19Z"}

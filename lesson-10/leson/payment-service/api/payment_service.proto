@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package api;
+
+service PaymentService {
+    rpc GenerateDepositLink(GenerateDepositLinkRequest) returns (GenerateDepositLinkResponse) {}
+    rpc UpdateTransactionStatus(UpdateTransactionStatusRequest) returns (UpdateTransactionStatusResponse) {}
+    rpc BuyMovie(BuyMovieRequest) returns (BuyMovieResponse) {}
+}
+
+enum TransactionStatus {
+    UNKNOWN = 0;
+    NEW = 1;
+    DONE = 2;
+    FAILURE = 3;
+}
+
+message UpdateTransactionStatusRequest {
+    int64 transaction_id = 1;
+    TransactionStatus new_status = 2;
+}
+
+message UpdateTransactionStatusResponse {
+    bool ok = 1;
+}
+
+message GenerateDepositLinkRequest {
+    int64 user_id = 1;
+    int64 amount = 2;
+}
+
+message GenerateDepositLinkResponse {
+    string payload = 1;
+}
+
+message BuyMovieRequest {
+    int64 user_id = 1;
+    int64 movie_id = 2;
+}
+
+message BuyMovieResponse {
+    bool ok = 1;
+}
+

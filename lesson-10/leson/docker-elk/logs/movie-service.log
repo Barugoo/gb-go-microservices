@@ -1,0 +1,2 @@
+{"level":"info","msg":"Starting grpc server on port 9098","rid":"","time":"2021-04-23T20:21:44Z"}
+{"level":"info","msg":"Starting metrics http server on port 9099","rid":"","time":"2021-04-23T20:21:44Z"}

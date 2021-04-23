@@ -1,0 +1,3 @@
+{"level":"info","msg":"Starting server on localhost: 9096","rid":"","time":"2021-04-10T13:26:23Z"}
+{"level":"warning","msg":"wrong password for user barugoo@mail.ru","rid":"0652d473-d1b1-4348-8bea-07ad5fa212b4","time":"2021-04-10T13:27:57Z"}
+{"level":"info","msg":"correct password barugoo@mail.ru ","rid":"1fb5543a-ba5f-4572-8188-f3a6b832707e","time":"2021-04-10T13:29:10Z"}
